@@ -1,0 +1,115 @@
+- backend -> nơi xử lý logic, dữ liệu, bảo mật
+    + xử lý dữ liệu -> lưu, sửa, xóa dlieu
+    + xác thực, phân quyền -> check userName/pass -> login
+                           -> check token -> vào private api / phân quyền
+    + giao tiếp client
+
+- flow trong web
+    + Frontend (trình duyệt)  --> HTTP Request -->  Backend (server)
+    Frontend <--- HTTP Response <--- Backend
+
+    + Frontend gửi HTTP request → server nhận → xử lý → trả HTTP response.
+    Express.js, Node.js → viết backend xử lý HTTP request.
+    Axios, fetch, XMLHttpRequest → gửi HTTP request từ frontend.
+
+- http ->  giao thức giao tiếp giữa client và server
+    - http request (client gửi) -> 3 phần chính 
+    a) HTTP Request (Client gửi)
+        Request gồm 3 phần chính:
+            Request line : METHOD PATH HTTP/VERSION
+                METHOD: GET, POST, PUT, DELETE… (hành động muốn thực hiện)
+                PATH / URL: địa chỉ resource, ví dụ /login, /profile
+                VERSION: HTTP/1.1, HTTP/2
+            Headers
+                Thông tin thêm gửi kèm request, ví dụ:
+                Content-Type: application/json → gửi JSON
+                Authorization: Bearer <token> → gửi token xác thực
+                Cookie → gửi cookie session
+            Body (tùy method)
+                Chứa dữ liệu gửi đi (thường dùng POST/PUT)
+                Ví dụ:
+                {
+                "username": "vu123"
+                "password": "123456"}
+
+
+    b) HTTP Response (Server trả)
+        Response cũng gồm 3 phần chính:
+            Status line : HTTP/1.1 200 OK
+                200 = thành công
+                401 = chưa xác thực
+                404 = không tìm thấy
+                500 = lỗi server
+            Headers
+                Ví dụ:
+                Content-Type: application/json
+                Set-Cookie → gửi cookie về client
+            Body
+                Chứa dữ liệu trả về, ví dụ JSON:
+                {
+                "accessToken": "abc123",
+                "user": { "id": "1", "displayName": "Vũ Trần Anh" }
+                }
+
+                | Status | Ý nghĩa               | Ví dụ                              |
+                | ------ | --------------------- | ---------------------------------- |
+                | 200    | OK                    | Request thành công                 |
+                | 201    | Created               | Tạo resource thành công            |
+                | 400    | Bad Request           | Thiếu dữ liệu, sai format          |
+                | 401    | Unauthorized          | Token không hợp lệ hoặc chưa login |
+                | 403    | Forbidden             | Không có quyền truy cập            |
+                | 404    | Not Found             | API hoặc resource không tồn tại    |
+                | 500    | Internal Server Error | Lỗi backend                        |
+note : api hoạt động dựa trên http -> khi gọi api luôn cần http
+
+- những hàm trong express giúp tạo ra api để frontend gọi
+    syntax để tạo api trong express
+    - app.METHOD(PATH, HANDLER)
+        + METHOD: get, post, put, delete,…
+        + PATH: endpoint mà frontend gọi, ví dụ /login, /profile
+        + HANDLER: hàm (req, res) => { … } xử lý request và trả response
+    note: 
+        + res.json() = trả dữ liệu dạng JSON cho client, chuẩn cho API, dễ parse trong frontend.
+
+- session trong backend -> bản ghi lưu trạng thái đăng nhập của user -> 1 bản trong db để lưu refresh token + ttin ng dùng
+    + lý do nên lưu refresh token vào session -> giúp backend dễ dàng qly refresh token
+        + nếu k lưu -> Refresh token chỉ có 1 nơi duy nhất lưu: phía client (trong cookie) -> kh an toàn -> nếu lộ sẽ bị refresh token mãi mãi
+
+note:
+    + token không giúp login -> login do userName + pass 
+        -> sau khi login nhận đc 1 access token(ageTime 5 - 30 min) + refresh token -> giúp chứng minh thân phận/ quyền để : giữ phiên đnhap/ phân quyền UI 
+    + refresh token chỉ gọi sau khi access token hết hạn và có request 401
+    + access token CHỈ được server kiểm tra khi client gửi request lên
+        Server lúc này mới kiểm tra:
+            + token có hợp lệ không
+            + token có hết hạn không
+            + token có bị sửa không
+            + token giải mã được không    
+            ->  Nếu hợp lệ → cho truy cập
+            ->  Nếu hết hạn → trả 401 → axios interceptor mới refresh token
+
+    + axios interceptor -> ta hiểu đơn giản là 1 bộ chặn nằm giữa request → server hoặc server → response.
+            -> Nó cho phép bạn can thiệp -> chỉnh sửa / kiểm tra / tự động thêm dữ liệu trước khi request gửi đi hoặc trước khi response trả về.        
+            ví dụ: 
+            - để có thể gửi request kèm theo token -> nếu không dùng  axios interceptor -> ta sẽ phải gắn thủ công từng request
+                -> còn khi dùng -> ta sẽ cấu hình sẵn 1 axios interceptor tự gắn token vào header -> và sử dụng axios đấy thực hiện các request -> ta chỉ cần làm 1 lần
+            - để xử lý khi token hết hạn -> tự động refresh 
+                -> ta sẽ cấu hình sẵn 1 axios interceptor tự gắn refresh token 
+                -> khi access token hết hạn -> server trả về lỗi 401 -> chặn request và tự động refresh như đã cấu hình ở axios -> nên ng dùng sẽ duy trì đc đăng nhập -> không bị logout nếu accessToken hết hạn
+                        ví dụ : - Response Interceptor bắt lỗi 401
+                                Interceptor tự động gửi request: -> để lấy access token mới bằng refresh token
+                                Lưu access token mới vào localStorage
+                                Interceptor gửi lại request cũ với token mới
+/*
+
+.use() là một method của Express app hoặc router dùng để gắn middleware hoặc router vào một path nhất định.
+    + syntax: app.use([path], callback)
+        path (tùy chọn): đường dẫn mà middleware sẽ được áp dụng.
+        callback: middleware function hoặc router sẽ xử lý request.
+
++ Middleware = hàm trung gian giúp xử lý request trước khi tới route hoặc response trước khi về client.
+
++ Middleware chạy theo thứ tự khai báo trong code.
+*/
+
+- rafce
