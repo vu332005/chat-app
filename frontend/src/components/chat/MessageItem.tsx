@@ -21,31 +21,34 @@ const MessageItem = ({
   selectedConvo,
   lastMessageStatus,
 }: MessageItemProps) => {
+  // vì mảng bị đảo ngược -> tin nhắn trc tin nhắn hiện tại phải là message[index + 1] 
   const prev = index + 1 < messages.length ? messages[index + 1] : undefined;
 
   // tính xem khi nào thì hiện thời gian
   const isShowTime =
-    index === 0 ||
+    !prev ||
     new Date(message.createdAt).getTime() -
-      new Date(prev?.createdAt || 0).getTime() >
+      new Date(prev.createdAt).getTime() >
       300000; // 5 phút
 
   // check xem khi nào thì hiện ava
   const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
 
+  // lấy thông tin ng gửi
   const participant = selectedConvo.participants.find(
     (p: Participant) => p._id.toString() === message.senderId.toString(),
   );
 
   return (
-    <>
+    <div className="flex flex-col">
       {/* time */}
       {isShowTime && (
         <span className="flex justify-center text-xs text-muted-foreground px-1">
           {formatMessageTime(new Date(message.createdAt))}
         </span>
       )}
-
+      
+      {/* định tuyến tin nhắn nằm bên trái / phải */}
       <div
         className={cn(
           "flex gap-2 message-bounce mt-1",
@@ -101,7 +104,7 @@ const MessageItem = ({
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

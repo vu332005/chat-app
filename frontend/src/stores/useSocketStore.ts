@@ -52,13 +52,27 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         unreadCounts,
       };
 
-      // if (
-      //   useChatStore.getState().activeConversationId === message.conversationId
-      // ) {
-      //   useChatStore.getState().markAsSeen();
-      // }
+      // nếu có tin nhắn mới trong convo đang được mở -> đánh dấu nó là đã đọc luôn
+      if (
+        useChatStore.getState().activeConversationId === message.conversationId
+      ) {
+        useChatStore.getState().markAsSeen();
+      }
 
       useChatStore.getState().updateConversation(updatedConversation);
+    });
+
+    // readMessage
+    socket.on("read-message", ({ conversation, lastMessage }) => {
+      const updated = {
+        _id: conversation._id,
+        lastMessage,
+        lastMessageAt: conversation.lastMessageAt,
+        unreadCounts: conversation.unreadCounts,
+        seenBy: conversation.seenBy,
+      };
+
+      useChatStore.getState().updateConversation(updated);
     });
   },
   disconnectSocket: () => {
