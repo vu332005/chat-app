@@ -7,8 +7,10 @@
 @layer base {
   :root {
     /* Base colors - soft pastels */
-    --background: 0 0% 100%; /*violet-50*/
-    --foreground: 217.2 32.6% 17.5%; /* slate-800 */
+    --background: 0 0% 100%;
+    /*violet-50*/
+    --foreground: 217.2 32.6% 17.5%;
+    /* slate-800 */
 
     /* Card system */
     --card: 250 100% 99%;
@@ -21,7 +23,8 @@
     /* Primary */
     /* Tím */
     --primary: 271 79% 47%;
-    --primary-foreground: 210 40% 96.1%; /*slate-100*/
+    --primary-foreground: 210 40% 96.1%;
+    /*slate-100*/
     /* Hồng */
     --primary-glow: 320 100% 70%;
 
@@ -68,34 +71,24 @@
     --radius: 1rem;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(var(--primary-glow))
-    );
-    --gradient-chat: linear-gradient(
-      135deg,
-      hsl(280, 100%, 65%),
-      hsl(320, 100%, 70%)
-    );
-    --gradient-accent: linear-gradient(
-      90deg,
-      hsl(var(--accent)),
-      hsl(200, 100%, 70%)
-    );
+    --gradient-primary: linear-gradient(135deg,
+        hsl(var(--primary)),
+        hsl(var(--primary-glow)));
+    --gradient-chat: linear-gradient(135deg,
+        hsl(280, 100%, 65%),
+        hsl(320, 100%, 70%));
+    --gradient-accent: linear-gradient(90deg,
+        hsl(var(--accent)),
+        hsl(200, 100%, 70%));
 
-    --gradient-glass: linear-gradient(
-      135deg,
-      hsl(250, 100%, 98%) 0%,
-      hsl(260, 50%, 96%) 100%
-    );
+    --gradient-glass: linear-gradient(135deg,
+        hsl(250, 100%, 98%) 0%,
+        hsl(260, 50%, 96%) 100%);
 
     /* pattern craft */
-    --gradient-purple: radial-gradient(
-      125% 125% at 50% 10%,
-      hsla(0, 0%, 100%, 1) 40%,
-      hsla(262, 83%, 58%, 0.5) 100%
-    );
+    --gradient-purple: radial-gradient(125% 125% at 50% 10%,
+        hsla(0, 0%, 100%, 1) 40%,
+        hsla(262, 83%, 58%, 0.5) 100%);
 
     /* Shadows */
     --shadow-soft: 0 8px 32px -8px hsl(271 79% 47% / 0.15);
@@ -105,7 +98,8 @@
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
 
-    --sidebar-foreground: 215.3 25% 26.7%; /*slate-700*/
+    --sidebar-foreground: 215.3 25% 26.7%;
+    /*slate-700*/
 
     --sidebar-primary: 240 5.9% 10%;
 
@@ -127,7 +121,8 @@
   .dark {
     /* Dark mode - neon on dark aesthetic */
     --background: 240 15% 18%;
-    --foreground: 214.3 31.8% 91.4%; /* slate-200 */
+    --foreground: 214.3 31.8% 91.4%;
+    /* slate-200 */
 
     --card: 240 15% 12%;
     --card-foreground: 214.3 31.8% 91.4%;
@@ -167,32 +162,22 @@
     --ring: 280 100% 70%;
 
     /* Dark mode gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(280, 100%, 70%),
-      hsl(320, 100%, 80%)
-    );
-    --gradient-chat: linear-gradient(
-      135deg,
-      hsl(280, 100%, 70%),
-      hsl(320, 100%, 75%)
-    );
-    --gradient-accent: linear-gradient(
-      90deg,
-      hsl(180, 100%, 60%),
-      hsl(200, 100%, 70%)
-    );
-    --gradient-glass: linear-gradient(
-      45deg,
-      hsl(240, 15%, 12%) 0%,
-      hsl(240, 15%, 18%) 100%
-    );
+    --gradient-primary: linear-gradient(135deg,
+        hsl(280, 100%, 70%),
+        hsl(320, 100%, 80%));
+    --gradient-chat: linear-gradient(135deg,
+        hsl(280, 100%, 70%),
+        hsl(320, 100%, 75%));
+    --gradient-accent: linear-gradient(90deg,
+        hsl(180, 100%, 60%),
+        hsl(200, 100%, 70%));
+    --gradient-glass: linear-gradient(45deg,
+        hsl(240, 15%, 12%) 0%,
+        hsl(240, 15%, 18%) 100%);
 
-    --gradient-purple: radial-gradient(
-      125% 125% at 50% 10%,
-      hsla(0, 0%, 0%, 1) 40%,
-      hsla(310, 96%, 11%, 0.5) 100%
-    );
+    --gradient-purple: radial-gradient(125% 125% at 50% 10%,
+        hsla(0, 0%, 0%, 1) 40%,
+        hsla(310, 96%, 11%, 0.5) 100%);
 
     /* Dark shadows with glow */
     --shadow-soft: 0 8px 32px -8px hsl(280 100% 70% / 0.25);
@@ -230,11 +215,19 @@
 
   /* Chat bubble variants */
   .chat-bubble-sent {
-    @apply bg-primary/80! text-[hsl(var(--chat-bubble-sent-foreground))]! shadow-[var(--shadow-bubble)];
+    @apply bg-primary/80 !text-[hsl(var(--chat-bubble-sent-foreground))] !shadow-[var(--shadow-bubble)];
   }
 
   .chat-bubble-received {
     @apply bg-[hsl(var(--chat-bubble-received))] text-[hsl(var(--chat-bubble-received-foreground))] border border-border/50;
+  }
+
+  .error-message {
+    @apply text-sm text-destructive;
+  }
+
+  .success-message {
+    @apply text-sm text-emerald-500;
   }
 
   /* Status indicators */
@@ -306,8 +299,7 @@
 
   /* Message bounce in animation */
   .message-bounce {
-    animation: messageSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
-      forwards;
+    animation: messageSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
   }
 
   @keyframes messageSlideIn {
@@ -315,6 +307,7 @@
       opacity: 0;
       transform: translateY(20px) scale(0.95);
     }
+
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -433,6 +426,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

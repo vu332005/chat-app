@@ -3,7 +3,6 @@
 import { cn, formatMessageTime } from "@/lib/utils";
 import type { Conversation, Message, Participant } from "@/types/chat";
 import UserAvatar from "./UserAvatar";
-import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 
 interface MessageItemProps {
@@ -75,18 +74,18 @@ const MessageItem = ({
             message.isOwn ? "items-end" : "items-start",
           )}
         >
-          <Card
+          <div
             className={cn(
-              "p-3",
+              "p-3 rounded-2xl",
               message.isOwn
-                ? "chat-bubble-sent border-0"
+                ? "chat-bubble-sent"
                 : "chat-bubble-received",
             )}
           >
             <p className="text-sm leading-relaxed break-words">
               {message.content}
             </p>
-          </Card>
+          </div>
 
           {/* seen/ delivered */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
