@@ -10,6 +10,8 @@ import { protectedRoute } from './middlewares/authMiddleware.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { app, server } from './socket/index.js';
+import { v2 as cloudinary } from "cloudinary";
+
 
 dotenv.config(); // nạp biến mtrg vào process.env
 
@@ -26,6 +28,13 @@ app.use(
 // middlewares
 app.use(express.json());
 app.use(cookieParser()); ////// dkmmm
+
+// CLOUDINARY Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 //public routes
 app.use('/api/auth', authRoute); // -> mỗi request bdau bằng api/auth sẽ dc chuyển vào authroute để xứ lý  -> app.use() gắn router, router tạo API xử lý req.
