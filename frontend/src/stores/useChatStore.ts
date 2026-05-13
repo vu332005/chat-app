@@ -24,6 +24,7 @@ export const useChatStore = create<ChatState>()(
           activeConversationId: null,
           convoLoading: false,
           messageLoading: false,
+          loading: false
         });
       },
       fetchConversations: async () => {

@@ -38,6 +38,8 @@ io.on('connection', async (socket) => {
     socket.join(conversationId);
   });
 
+  socket.join(user._id.toString());
+
   socket.on('disconnect', () => {
     // nếu ng dùng off -> xóa tín hiệu online đi -> gửi lại tín hiệu những ng đang online khác
     onlineUsers.delete(user._id);

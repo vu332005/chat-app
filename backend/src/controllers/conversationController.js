@@ -90,11 +90,11 @@ export const createConversation = async (req, res) => {
 
     const formatted = { ...conversation.toObject(), participants };
 
-    // if (type === 'group') {
-    //   memberIds.forEach((userId) => {
-    //     io.to(userId).emit('new-group', formatted);
-    //   });
-    // }
+    if (type === 'group') {
+      memberIds.forEach((userId) => {
+        io.to(userId).emit('new-group', formatted);
+      });
+    }
 
     // if (type === 'direct') {
     //   io.to(userId).emit('new-group', formatted);
