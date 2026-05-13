@@ -27,10 +27,15 @@ io.on('connection', async (socket) => {
   onlineUsers.set(user._id, socket.id);
   io.emit('online-users', Array.from(onlineUsers.keys()));
 
-  // cho user join vào đúng room(id của room chính là id của convo) -> để khi nhắn tin -> sẽ emit vào đúng room
+  // sau khi đăng nhập -> cho user join vào tất cả các room(id của room chính là id của convo) đã có -> để khi nhắn tin -> sẽ emit vào đúng room
   const conversationIds = await getUserConversationsForSocketIO(user._id);
   conversationIds.forEach((id) => {
     socket.join(id);
+  });
+
+  // khi tạo convo mới thành công -> cho user join vào room mới
+  socket.on("join-conversation", (conversationId) => {
+    socket.join(conversationId);
   });
 
   socket.on('disconnect', () => {
